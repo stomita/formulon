@@ -1,7 +1,5 @@
 .DS_Store
 /node_modules
-/lib/*
-!/lib/.keep
 /tmp
 npm-debug.log
 .npmrc
