@@ -1,5 +1,6 @@
 'use strict'
 import { dispatch } from './functionDispatcher'
+import { buildLiteralFromJs } from './utils'
 
 export const build = (formula) => {
   const parser = require('./salesforceParser.js')
@@ -31,8 +32,20 @@ export const extract = (ast, state = []) => {
       return state
     case 'callExpression':
       return ast.arguments.map((arg) => extract(arg, state)).reduce((a, b) => { return a.concat(b) }, [])
+    case 'memberExpression':
+      return state.concat(extractFieldPath(ast.object, [ast.property.name]).join('.'))
     case 'identifier':
       return state.concat(ast.name)
+  }
+}
+
+export const extractFieldPath = (ast, fields=[]) => {
+  console.log('extractFieldPath', ast, fields);
+  switch (ast.type) {
+    case 'identifier':
+      return [ast.name].concat(fields);
+    case 'memberExpression':
+      return extractFieldPath(ast.object, [ast.property.name].concat(fields))
   }
 }
 
@@ -56,5 +69,31 @@ export const replace = (ast, replacement) => {
       } else {
         return ast
       }
+  }
+}
+
+export const evaluate = (ast, context = {}) => {
+  switch (ast.type) {
+    case 'literal':
+      return ast;
+    case 'callExpression':
+      return dispatch(ast.id, ast.arguments.map((a) => evaluate(a, context)))
+    case 'identifier':
+      return buildLiteralFromJs(context[ast.name])
+    case 'memberExpression':
+      return buildLiteralFromJs(evaluate(ast.object, context).value[ast.property.name])
+  }
+}
+
+export const parse = (formula) => {
+  const ast = build(formula)
+  return {
+    _ast: ast,
+    extract() {
+      return extract(ast)
+    },
+    evaluate(context) {
+      return evaluate(ast, context).value
+    }
   }
 }

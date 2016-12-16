@@ -10,15 +10,33 @@ start
 PrimaryExpression
   = ArithmeticExpression
   / UnaryExpression
+  / MemberExpression
   / CallExpression
-  / Identifier
   / Literal
 
 LeftHandSideExpression
   = CallExpression
-  / Identifier
+  / MemberExpression
   / Literal
   / "(" __ expression:ArithmeticExpression __ ")" { return expression; }
+
+MemberExpression
+  = head:Identifier
+    tail:(
+      __ "." __ property:IdentifierName {
+        return { property: property, computed: false };
+      }
+    )*
+    {
+      return tail.reduce(function(result, element) {
+        return {
+          type: "memberExpression",
+          object: result,
+          property: element.property,
+          computed: element.computed
+        };
+      }, head);
+    }
 
 CallExpression
   = id:FunctionIdentifier args:Arguments {
