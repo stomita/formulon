@@ -19,6 +19,11 @@ export const buildLiteralFromJs = (input) => {
         base,
         { dataType: 'checkbox', options: {} }
       )
+    case 'object':
+      return Object.assign(
+        base,
+        { dataType: 'complexvalue' }
+      )
     default:
       throw new TypeError(`Unsupported type '${type}'`)
   }
