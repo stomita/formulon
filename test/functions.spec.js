@@ -15,9 +15,9 @@ describe('add', () => {
   })
 })
 
-describe('subtract', () => {
-  it('subtracts correctly', () => {
-    expect(functions.sf$subtract(buildLiteralFromJs(10), buildLiteralFromJs(100))).to.deep.eq(buildLiteralFromJs(-90))
+describe('negate', () => {
+  it('negates correctly', () => {
+    expect(functions.sf$negate(buildLiteralFromJs(10))).to.deep.eq(buildLiteralFromJs(-10))
   })
 })
 
@@ -27,9 +27,9 @@ describe('multiply', () => {
   })
 })
 
-describe('divide', () => {
-  it('divides correctly', () => {
-    expect(functions.sf$divide(buildLiteralFromJs(10), buildLiteralFromJs(2))).to.deep.eq(buildLiteralFromJs(5))
+describe('invert', () => {
+  it('inverts correctly', () => {
+    expect(functions.sf$invert(buildLiteralFromJs(10))).to.deep.eq(buildLiteralFromJs(0.1))
   })
 })
 
@@ -269,7 +269,7 @@ describe('ceiling', () => {
 
 describe('exp', () => {
   it('Integer Literal', () => {
-    expect(functions.sf$exp(buildLiteralFromJs(10))).to.deep.eq(buildLiteralFromJs(22026.46579480671))
+    expect(functions.sf$exp(buildLiteralFromJs(1))).to.deep.eq(buildLiteralFromJs(2.718281828459045))
   })
 })
 

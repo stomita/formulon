@@ -46,6 +46,25 @@ describe('ast', () => {
         }
         expect(build(' 3 ')).to.deep.equal(expected)
       })
+
+      it('parses AST correctly with whitespaces in function calls', () => {
+        const expected = {
+          type: "callExpression",
+          id: "ceiling",
+          arguments: [
+            {
+              type: "literal",
+              value: 1.9,
+              dataType: "number",
+              options: {
+                length: 1,
+                scale: 1
+              }
+            }
+          ]
+        }
+        expect(build('CEILING (1.9 )')).to.deep.equal(expected)
+      })
     })
 
     context('Function Calls', () => {
@@ -105,7 +124,8 @@ describe('ast', () => {
         expect(build('MOD(11, 2)')).to.deep.equal(expected)
       })
 
-      it('nested function calls', () => {
+      it('nested function calls', function() {
+        this.timeout(5000)
         const expected = {
           type: 'callExpression',
           id: 'if',
@@ -200,7 +220,7 @@ describe('ast', () => {
       it('simple subtraction', () => {
         const expected = {
           type: 'callExpression',
-          id: 'subtract',
+          id: 'add',
           arguments: [
             {
               type: 'literal',
@@ -212,13 +232,19 @@ describe('ast', () => {
               }
             },
             {
-              type: 'literal',
-              value: 10,
-              dataType: 'number',
-              options: {
-                length: 2,
-                scale: 0
-              }
+              type: "callExpression",
+              id: "negate",
+              arguments: [
+                {
+                  type: 'literal',
+                  value: 10,
+                  dataType: 'number',
+                  options: {
+                    length: 2,
+                    scale: 0
+                  }
+                }
+              ]
             }
           ]
         }
@@ -240,28 +266,22 @@ describe('ast', () => {
               }
             },
             {
-              type: 'callExpression',
-              id: 'add',
-              arguments: [
-                {
-                  type: 'literal',
-                  value: 2,
-                  dataType: 'number',
-                  options: {
-                    length: 1,
-                    scale: 0
-                  }
-                },
-                {
-                  type: 'literal',
-                  value: 3,
-                  dataType: 'number',
-                  options: {
-                    length: 1,
-                    scale: 0
-                  }
-                }
-              ]
+              type: 'literal',
+              value: 2,
+              dataType: 'number',
+              options: {
+                length: 1,
+                scale: 0
+              }
+            },
+            {
+              type: 'literal',
+              value: 3,
+              dataType: 'number',
+              options: {
+                length: 1,
+                scale: 0
+              }
             }
           ]
         }
@@ -343,7 +363,7 @@ describe('ast', () => {
       it('simple division', () => {
         const expected = {
           type: 'callExpression',
-          id: 'divide',
+          id: 'multiply',
           arguments: [
             {
               type: 'literal',
@@ -355,13 +375,19 @@ describe('ast', () => {
               }
             },
             {
-              type: 'literal',
-              value: 25,
-              dataType: 'number',
-              options: {
-                length: 2,
-                scale: 0
-              }
+              type: "callExpression",
+              id: "invert",
+              arguments: [
+                {
+                  type: 'literal',
+                  value: 25,
+                  dataType: 'number',
+                  options: {
+                    length: 2,
+                    scale: 0
+                  }
+                }
+              ]
             }
           ]
         }

@@ -4,20 +4,22 @@ import { buildLiteralFromJs, sfRound } from './utils'
 
 // Math Operators
 
-export const sf$add = (value1, value2) => {
-  return buildLiteralFromJs(value1.value + value2.value)
+export const sf$negate = (value) => {
+  return buildLiteralFromJs(-1 * (value.value))
 }
 
-export const sf$subtract = (value1, value2) => {
-  return buildLiteralFromJs(value1.value - value2.value)
+export const sf$invert = (value) => {
+  return buildLiteralFromJs(1.0 / (value.value))
 }
 
-export const sf$multiply = (value1, value2) => {
-  return buildLiteralFromJs(value1.value * value2.value)
+export const sf$add = (...input) => {
+  let values = input.map((v) => v.value)
+  return buildLiteralFromJs(values.reduce((a, b) => a + b))
 }
 
-export const sf$divide = (value1, value2) => {
-  return buildLiteralFromJs(value1.value / value2.value)
+export const sf$multiply = (...input) => {
+  let values = input.map((v) => v.value)
+  return buildLiteralFromJs(values.reduce((a, b) => a * b))
 }
 
 export const sf$exponentiate = (value1, value2) => {
